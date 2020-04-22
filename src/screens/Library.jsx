@@ -7,43 +7,42 @@ import Button from "../components/Button"
 import { getData } from "../services/Services";
 
 const Library = (props) => {
-    const [cardComponent, setCardComponent] = useState(null)
-    const [user, setUser] = useState("candidate")
+    const [data, setData] = useState(null)
+    const [type, setType] = useState("labs")
+    const [buttonText, setButtonText] = useState('company')
 
     useEffect(() => {
-        const type = user === "company" ? "candidates" : "labs";
         getData(type).then(data => {
-            setCardComponent(
-                <>
-                    <Button
-                        size="large"
-                        variant="primary"
-                        onClick={() => { user === "company" ? setUser("candidate") : setUser("company") }}
-                    >
-                        {"Switch to: " + user}
-                    </Button>
-
-                    {data.map((item) => (
-                        <div
-                            key={item.id}
-                            onClick={() => props.history.push({ pathname: `/profile/${item.id}`, dataType: type })}
-                        >
-                            <Card
-                                outline
-                                name={item.name}
-                                imgUrl={type === "labs" ? item.company.profile_image : item.profile_image}
-                                technologies={item.technologies}
-                            ></Card>
-                        </div>
-                    ))}
-                </>
-            )
+            setData(data)
         })
-    }, [props.history, user])
+        type === 'labs' ? setButtonText('company') : setButtonText('user')
+    }, [type, buttonText])
 
 
-    if (cardComponent)
-        return cardComponent;
+    if (data)
+        return <>
+            <Button
+                size="large"
+                variant="primary"
+                onClick={() => { type === "candidates" ? setType("labs") : setType("candidates") }}
+            >
+                {`Switch to: ${buttonText}`}
+            </Button>
+
+            {data.map((item) => (
+                <div
+                    key={item.id}
+                    onClick={() => props.history.push({ pathname: `/profile/${item.id}`, dataType: type })}
+                >
+                    <Card
+                        outline
+                        name={item.name}
+                        imgUrl={item.profile_image}
+                        technologies={item.technologies}
+                    ></Card>
+                </div>
+            ))}
+        </>
     return <Loader />
 };
 
