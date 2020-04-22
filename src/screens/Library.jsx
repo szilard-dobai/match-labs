@@ -39,7 +39,7 @@ const Library = (props) => {
                         name={item.name}
                         imgUrl={item.profile_image}
                         technologies={item.technologies}
-                    ></Card>
+                    />
                 </div>
             ))}
         </>

@@ -19,7 +19,7 @@ const Profile = (props) => {
     return <>
       <div className={styles.profile}>
         <div className={styles.hero}>
-          <Card imgUrl={data.profile_image}></Card>
+          <Card imgUrl={data.profile_image}/>
         </div>
 
         <div className={styles.rightSide}>
@@ -27,7 +27,7 @@ const Profile = (props) => {
 
           <section className={styles.skills}>
             <p className={styles.tagsTitle}>Technologies</p>
-            {data.technologies && <Tags tags={data.technologies}></Tags>}
+            {data.technologies && <Tags tags={data.technologies}/>}
           </section>
 
           {data.objectives && <section className={styles.objectives}>
