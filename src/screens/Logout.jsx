@@ -3,12 +3,12 @@ import { logout } from "../utils/request";
 import { AppContext } from "../Context"
 
 const Logout = () => {
-  const { onLogout } = useContext(AppContext)
+  const { setUser } = useContext(AppContext)
   useEffect(() => {
     const onMount = async () => {
       localStorage.setItem("role", "");
       localStorage.setItem("token", "");
-      onLogout()
+      setUser(false)
       await logout();
     };
     onMount();
