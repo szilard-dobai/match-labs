@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { logout } from "../utils/request";
+import { AppContext } from "../Context"
 
 const Logout = () => {
+  const { onLogout } = useContext(AppContext)
   useEffect(() => {
     const onMount = async () => {
       localStorage.setItem("role", "");
       localStorage.setItem("token", "");
+      onLogout()
       await logout();
     };
     onMount();

@@ -25,10 +25,14 @@ const App = () => {
     onMount();
   }, []);
 
+  const onLogout = () => {
+    setUser(false)
+  }
+
   if (user === null) return <Loader />;
 
   return (
-    <AppContext.Provider value={{ user }}>
+    <AppContext.Provider value={{ user, onLogout }}>
       <BrowserRouter>
         <Toggle />
         <Switch>

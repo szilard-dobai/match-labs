@@ -38,7 +38,7 @@ const Login = () => {
           {Object.keys(fields).map((key) => (
             <div key={key} className={styles.field}>
               <input
-                value={fields[key]}
+                placeholder={fields[key]}
                 onChange={(e) => onInputChange(e)}
                 type={key}
                 name={key}
