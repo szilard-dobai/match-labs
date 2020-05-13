@@ -142,9 +142,11 @@ export const register = async (data) => {
   return json;
 };
 
-export const assignRole = async (data) => {
+export const assignRole = async (role, data) => {
+  const endpoint = role === 'candidate' ? 'candidates' : 'companies'
+  console.log(data)
   const res = await fetch(
-    `https://match-labs-api.herokuapp.com/api/candidates`,
+    `${baseUrl}/${endpoint}`,
     {
       method: "POST",
       headers: { ...config.headers, ...config.authorization },

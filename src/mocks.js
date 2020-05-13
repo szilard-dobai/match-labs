@@ -70,4 +70,15 @@ export const CREATE_CANDIDATE_FIELDS = [
   { value: "", name: "phone", placeholder: "Phone" },
   { value: "", name: "profile_image", placeholder: "Profile image url" },
   { value: "", name: "password", placeholder: "Password" },
+  { value: "", name: "technologies", placeholder: "Technologies" },
+];
+
+export const CREATE_COMPANY_FIELDS = [
+  { value: "", name: "description", placeholder: "Description" },
+  { value: "", name: "email", placeholder: "Email" },
+  { value: "", name: "first_name", placeholder: "First name" },
+  { value: "", name: "last_name", placeholder: "Last name" },
+  { value: "", name: "phone", placeholder: "Phone" },
+  { value: "", name: "profile_image", placeholder: "Profile image url" },
+  { value: "", name: "password", placeholder: "Password" }
 ];

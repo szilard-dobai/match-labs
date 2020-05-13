@@ -26,14 +26,17 @@ const CandidateForm = ({ fields, onSubmit }) => {
   const onChange = (e) => {
     const newValues = [...values];
     const index = newValues.findIndex((value) => value.name === e.target.name);
-    newValues[index] = { ...newValues[index], value: e.target.value };
+    // newValues[index] = { ...newValues[index], value: e.target.value };
+    newValues.splice(index, 1, { ...newValues[index], value: e.target.value });
     setValues(newValues);
   };
 
   const onSelectChange = (selected) => {
     const newValues = [...values];
-    const index=newValues.findIndex(value => value.name === 'technologies')
-    newValues[index] = { name: 'technologies', value: selected}
+    const index = newValues.findIndex(value => value.name === 'technologies')
+    // newValues[index] = { name: 'technologies', value: selected}
+    newValues.splice(index, 1, { name: 'technologies', value: selected });
+    // I used splice() because if findIndex() returns -1, newValues[-1] would add an arbitrary property to the array
     setValues(newValues)
   };
 

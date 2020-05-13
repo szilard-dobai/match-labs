@@ -11,6 +11,7 @@ const Account = () => {
   const [fields, setFields] = useState(null);
 
   useEffect(() => {
+    console.log(user)
     const newFields = Object.keys(user.personal).map((key) => {
       if (key !== 'technologies')
         return ({
