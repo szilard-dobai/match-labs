@@ -11,16 +11,24 @@ const Account = () => {
   const [fields, setFields] = useState(null);
 
   useEffect(() => {
-    const newFields = Object.keys(user.personal).map((key) => ({
-      name: key,
-      value: user.personal[key],
-    }));
+    const newFields = Object.keys(user.personal).map((key) => {
+      if (key !== 'technologies')
+        return ({
+          name: key,
+          value: user.personal[key],
+        })
+      else
+        return ({
+          name: key,
+          value: user.personal[key].map(item => { return ({ value: item.id, label: item.name })})
+        })
+    })
     setFields(newFields);
   }, [user]);
 
   const onFormSubmit = async (values) => {
     const { technologies, ...rest } = values;
-    await editAccount(user.id, { [user.role]: rest, technologies });
+    await editAccount(user.id, { [user.role]: rest, technologies: technologies.map(item => item.value) });
   };
 
   if (!fields) return <Loader />;

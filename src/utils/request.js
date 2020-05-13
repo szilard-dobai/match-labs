@@ -27,6 +27,7 @@ const formatMe = (data) =>
           description: data.matcher.description,
           phone: data.matcher.phone,
           profile_image: data.matcher.profile_image,
+          technologies: data.matcher.technologies
         },
       }
     : {
@@ -205,3 +206,12 @@ export const editAccount = async (id, data) => {
   const json = await res.json();
   return json;
 };
+
+export const fetchTechnologies = async () => {
+  const res = await fetch(`${baseUrl}/technologies`, {
+    method: "GET",
+    headers: {...config.headers, ...config.authorization},
+  })
+  const json = await res.json();
+  return json;
+}

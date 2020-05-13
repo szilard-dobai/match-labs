@@ -4,14 +4,23 @@ import styles from "./CandidateForm.module.css";
 import Button from "./Button";
 import Loader from "./Loader";
 import Select from "react-select";
+import makeAnimated from 'react-select/animated';
 import { fetchTechnologies } from "../utils/request";
 
+const animatedComponents = makeAnimated();
+
 const CandidateForm = ({ fields, onSubmit }) => {
-  // 1. Set values and technologies
   const [values, setValues] = useState(fields);
+  const [tech, setTech] = useState(null)
 
   useEffect(() => {
-    // 2. Get technologies from API
+    const onMount = async () => {
+      const data = await fetchTechnologies()
+      setTech(data.map((item) => {
+        return ({ value: item.id, label: item.name })
+      }))
+    }
+    onMount()
   }, []);
 
   const onChange = (e) => {
@@ -22,9 +31,10 @@ const CandidateForm = ({ fields, onSubmit }) => {
   };
 
   const onSelectChange = (selected) => {
-    // 3. copy values
-    // find index of technologies input
-    // loop through the selected values
+    const newValues = [...values];
+    const index=newValues.findIndex(value => value.name === 'technologies')
+    newValues[index] = { name: 'technologies', value: selected}
+    setValues(newValues)
   };
 
   const formHandler = (e) => {
@@ -42,21 +52,26 @@ const CandidateForm = ({ fields, onSubmit }) => {
   return (
     <>
       <form onSubmit={formHandler} className={styles.form}>
-        {values.map((field) => (
-          // 4. Check if field is not technologies
-          <div key={field.name} className={styles.field}>
-            <input
-              required
-              onChange={onChange}
-              value={field.value}
-              placeholder={field.placeholder || ""}
-              name={field.name}
-            ></input>
-          </div>
-          // 5. Bring prebuilt select
-          // Add onSelectChange and options
-        ))}
-
+        {values.map((field) => {
+          if (field.name !== "technologies")
+            return (
+              <div key={field.name} className={styles.field}>
+                <input
+                  required
+                  onChange={onChange}
+                  value={field.value}
+                  placeholder={field.placeholder || ""}
+                  name={field.name}
+                ></input>
+              </div>
+            )
+          else
+            return (
+              <div key={field.name} className={styles.field}>
+                <Select options={tech} defaultValue={field.value} onChange={onSelectChange} isMulti closeMenuOnSelect={false} components={animatedComponents} />
+              </div>
+            )
+        })}
         <Button type={"submit"} variant={"secondary"} size={"medium"}>
           Submit
         </Button>
