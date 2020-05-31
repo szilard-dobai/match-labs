@@ -5,10 +5,12 @@ import Card from "../components/Card";
 import { fetchProfile, fetchLikes, like, dislike } from "../utils/request";
 import Loader from "../components/Loader";
 import GoBack from "../components/GoBack";
+import Match from "../components/Match";
 
 const Profile = (props) => {
   const [profile, setProfile] = useState(null);
   const [likes, setLikes] = useState(null);
+  const [match, setMatch] = useState(false);
 
   useEffect(() => {
     const onMount = async () => {
@@ -24,25 +26,32 @@ const Profile = (props) => {
   }, [props.match.params.id]);
 
   useEffect(() => {
-
   }, [likes]);
 
   const removeLike = () => {
     // 5. Find like index and splice it from state
+    const newLikes = [...likes]
     const profileIndex = likes.findIndex(lab => lab.id === profile.id)
-    likes.splice(profileIndex,1)
-    setLikes(likes)
+    newLikes.splice(profileIndex, 1)
+    setLikes(newLikes)
   };
 
   const onButtonClick = async (direction) => {
     // 4. removeLike from state
-    removeLike();
-
     // 6. likeOrDislike
-    const liked =
-      direction === "right"
-        ? await like(profile.id)
-        : await dislike(profile.id);
+
+    const liked = direction === "right"
+      ? await like(profile.id)
+      : await dislike(profile.id);
+
+    if (liked.match) {
+      const newMatch = { ...likes[likes.length - 1] };
+      setMatch(newMatch);
+      removeLike();
+    }
+
+    if (liked)
+      removeLike();
   };
 
   const _renderButtons = () => {
@@ -60,10 +69,17 @@ const Profile = (props) => {
 
   const isLikeable = () => {
     // 3. likes.some
-    if (likes && profile)
-      return likes.some(lab => lab.id === profile.id)
+    return likes.some(lab => lab.id === profile.id)
   };
 
+  const onContinue = () => {
+    setMatch(null);
+  }
+
+  if (match)
+    return (
+      <Match match={match} onContinueSwiping={onContinue} />
+    )
 
   if (likes && profile)
     return (
