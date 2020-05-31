@@ -45,7 +45,11 @@ const CandidateForm = ({ fields, onSubmit }) => {
     e.preventDefault();
     const obj = {};
     values.forEach((item) => {
-      obj[item.name] = item.value;
+      if (item.name !== 'technologies')
+        obj[item.name] = item.value;
+      else {
+        obj[item.name] = item.value.map(s => typeof s === "number" ? s : s.value)
+      }
     });
 
     onSubmit(obj);
@@ -53,13 +57,15 @@ const CandidateForm = ({ fields, onSubmit }) => {
 
   if (!values) return <Loader></Loader>;
 
-  const _renderSelect = () => {
+  const _renderSelect = (defaultValue) => {
     return (
       <Select
         name={"technologies"}
         onChange={onSelectChange}
         isMulti
         options={technologies}
+        defaultValue={defaultValue}
+        closeMenuOnSelect={false}
         placeholder={"Technologies"}
         styles={{
           control: () => ({
@@ -80,7 +86,7 @@ const CandidateForm = ({ fields, onSubmit }) => {
       <form onSubmit={(e) => formHandler(e)} className={styles.form}>
         {values.map((field) => (
           <React.Fragment key={field.name}>
-            {field.name === "technologies" && _renderSelect()}
+            {field.name === "technologies" && _renderSelect(field.value)}
             {field.name !== "technologies" && (
               <div className={styles.field}>
                 <input

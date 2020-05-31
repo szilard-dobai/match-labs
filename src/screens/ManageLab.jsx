@@ -34,13 +34,12 @@ const ManageLab = () => {
   };
 
   const deleteLabCall = async () => {
-    const deleted = await deleteLab(lab.personal.id);
-    console.log(deleted)
+    await deleteLab(lab.personal.id);
     await getLab();
   };
 
   const onFormSubmit = async (values) => {
-    const { start_date, technologies, ...rest } = values;
+    const { technologies, ...rest } = values;
     const labObj = {
       lab: rest,
       technologies,
