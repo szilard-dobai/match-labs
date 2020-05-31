@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import styles from "./ManageLab.module.css";
 import Button from "../components/Button";
-import { fetchLabs, createLab } from "../utils/request";
+import { fetchLabs, createLab, deleteLab, editLab } from "../utils/request";
 import { useEffect } from "react";
 import CandidateForm from "../components/CandidateForm";
 import Loader from "../components/Loader";
@@ -12,6 +12,8 @@ const ManageLab = () => {
   const [lab, setLab] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
   // 5. create labFields
+  const [labFields, setLabFields] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     getLab();
@@ -22,10 +24,19 @@ const ManageLab = () => {
     setLab(lab);
 
     // 4. if lab setLabFields() for CandidateForm
+    if (lab) {
+      const fields = Object.keys(lab.personal).map((key) => ({
+        name: key,
+        value: lab.personal[key],
+      }));
+      setLabFields(fields)
+    }
   };
 
-  const deleteLab = async () => {
-    const deleted = await deleteLab(lab.id);
+  const deleteLabCall = async () => {
+    const deleted = await deleteLab(lab.personal.id);
+    console.log(deleted)
+    await getLab();
   };
 
   const onFormSubmit = async (values) => {
@@ -36,9 +47,17 @@ const ManageLab = () => {
     };
 
     // 6. if isEditing editLab || createLab
-    await createLab(labObj);
-    await getLab();
+    if (isCreating && !isEditing) {
+      await createLab(labObj);
+      await getLab();
+      setIsCreating(!isCreating)
+    }
 
+    if(isEditing && !isCreating) {
+      await editLab(lab.personal.id, labObj);
+      await getLab();
+      setIsEditing(!isEditing)
+    }
     // 7. if isEditing setIsEditing || setIsCreating
   };
 
@@ -58,12 +77,12 @@ const ManageLab = () => {
         ></Card>
         <div className={styles.buttons}>
           <div className={styles.button}>
-            <Button variant={"primary"} size={"small"}>
+            <Button action={() => setIsEditing(!isEditing)} variant={"primary"} size={"small"}>
               Edit lab
             </Button>
           </div>
           <div className={styles.button}>
-            <Button variant={"secondary"} size={"small"}>
+            <Button action={() => deleteLabCall()} variant={"secondary"} size={"small"}>
               Delete lab
             </Button>
           </div>
@@ -101,6 +120,13 @@ const ManageLab = () => {
         {!lab && isCreating && (
           <CandidateForm
             fields={MANAGE_LAB_FIELDS}
+            onSubmit={onFormSubmit}
+          ></CandidateForm>
+        )}
+        {lab && !isEditing && _renderEditLab()}
+        {lab && isEditing && (
+          <CandidateForm
+            fields={labFields}
             onSubmit={onFormSubmit}
           ></CandidateForm>
         )}
